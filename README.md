@@ -1,76 +1,89 @@
-# react-native-appupgrade
+# react-native-easy-upgrade
 Easy to upgrade your react-native app
 
 ## Getting started
 
-`$ npm install @hm910705/react-native-appupgrade --save`
+`$ npm install react-native-easy-upgrade --save`
 
 ### Mostly automatic installation
 
-`$ react-native link @hm910705/react-native-appupgrade`
+`$ react-native link react-native-easy-upgrade`
 
 ### Manual installation
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-appupgrade` and add `RNAppUpgrade.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNAppUpgrade.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
+2. Go to `node_modules` ➜ `react-native-easy-upgrade` and add `RNEasyUpgrade.xcodeproj`
+3. In XCode, in the project navigator, select your project. Add `libRNEasyUpgrade.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
 
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-- Add `import com.reactlibrary.RNAppUpgradePackage;` to the imports at the top of the file
-- Add `new RNAppUpgradePackage()` to the list returned by the `getPackages()` method
+- Add `import org.hstar.reactnative.easyupgrade.RNEasyUpgradePackage;` to the imports at the top of the file
+- Add `new RNEasyUpgradePackage()` to the list returned by the `getPackages()` method
 
 2. Append the following lines to `android/settings.gradle`:
 ```
-include ':react-native-appupgrade'
-project(':react-native-appupgrade').projectDir = new File(rootProject.projectDir,   '../node_modules/react-native-appupgrade/android')
+include ':react-native-easy-upgrade'
+project(':react-native-easy-upgrade').projectDir = new File(rootProject.projectDir,   '../node_modules/react-native-easy-upgrade/android')
 ```
 
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
 ```
-  compile project(':react-native-appupgrade')
+  implementation project(':react-native-easy-upgrade')
 ```
+
+#### 2019-8-30 Note:
+
+This project has been added to the `android file provider`, if the main project or other plug-in `provider` conflicts, please keep it consistent.
+
 ## Usage
 
 ```javascript
-import RNAppUpgrade from '@hm910705/react-native-appupgrade';
+import RNEasyUpgrade from 'react-native-easy-upgrade';
 
-const rnAppUpgrade = new RNAppUpgrade({
-  iosAppId: '1229539546',
-  downloadApkSavePath: '', // if not set, default is data/Temp_App${versionName}.apk
-  downloadApkStart: () => {
-    console.log('Start');
-  },
-  downloadApkProgress: progress => {
-    console.log(`Downloading ${progress}%...`);
-  },
-  downloadApkEnd: needUpdate => {
-    Alert.alert('提示', '发现新版本，无需流量既可更新！', [
-      { text: '取消', onPress: () => {} },
-      { text: '安装', onPress: () => {
-        rnAppUpgrade.installUpgradeVersion();
-      } }
-    ]);
+this.easyUpgrade = new RNEasyUpgrade({
+  iOSAppId: '12345678',
+  downloadTitle: 'Download package',
+  downloadDescription: 'Packing downloading...',
+  downloadApkEnd: () => {
+   //eg: install apk
+    this.easyUpgrade.installApk();
   },
   onError: () => {
     console.log('downloadApkError');
   }
 });
 
-// For Android
-if (Platform.os === 'android') {
-  Toast("发现新版本，正在下载");
-  rnAppUpgrade.downloadApk(apkFilePath);
-} else if (Platform.OS === 'ios'){
-  rnAppUpgrade.checkAppVersionIOS()
-  .then(versionInfo => {
-    if(versionInfo.hasNewVersion){
-      // Navigate to AppStore
-      rnAppUpgrade.navigateToAppStore();
-    }
-  });
+async getUpdateInfo() {
+  let updateInfo = {
+    latestVersion: '3.0.0',
+    hasNewVersion: true,
+    apkUrl: 'http://{remoteApkDownloadUrl}'
+  };
+  if (isAndroid) {
+    updateInfo = await fetch('http://{remoteUrl}/updateInfo.json')
+  } else {
+    updateInfo = await this.easyUpgrade.checkAppVersionIOS()
+  }
+  return updateInfo;
 }
+
+ async startUpgrade() {
+    const updateInfo = await this.getUpdateInfo();
+    if (updateInfo.hasNewVersion) {
+      Alert.alert(
+        'Find a new version: ' + updateInfo.latestVersion,
+        'Whether to upgrade app?',
+        [
+          {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+          {text: 'Upgrade', onPress: () => this.easyUpgrade.startAppUpdate(updateInfo.apkUrl)},
+        ],
+      )
+    }
+  }
+
 ```
+
+
