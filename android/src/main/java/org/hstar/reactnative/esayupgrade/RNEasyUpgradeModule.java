@@ -12,8 +12,8 @@ import android.net.Uri;
 
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.support.v4.util.LongSparseArray;
+import androidx.core.content.FileProvider;
+import androidx.collection.LongSparseArray;
 import android.util.Log;
 import com.facebook.react.bridge.*;
 import org.hstar.reactnative.esayupgrade.IORejectionException;

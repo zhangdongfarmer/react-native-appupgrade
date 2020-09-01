@@ -1,4 +1,7 @@
 # react-native-easy-upgrade
+Forked From https://github.com/react-native-org/react-native-easy-upgrade
+Thanks to the Author
+
 Easy to upgrade your react-native app
 
 ## Getting started

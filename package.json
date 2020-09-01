@@ -1,19 +1,20 @@
 {
-  "name": "react-native-easy-upgrade",
-  "version": "0.1.0",
-  "description": "Easy to upgrade your react-native app",
+  "name": "@manyox/react-native-easy-upgrade",
+  "version": "1.0.1",
+  "description": "Forked From https://github.com/react-native-org/react-native-easy-upgrade Thanks to the Author",
   "main": "index.js",
   "directories": {
-    "doc": "docs"
+    "doc": "docs",
+    "example": "examples",
+    "lib": "lib"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-native-org/react-native-easy-upgrade.git"
+    "url": "git+https://github.com/zhangdongfarmer/react-native-easy-upgrade.git"
   },
-  "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
